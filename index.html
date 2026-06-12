@@ -137,7 +137,29 @@
     });
 
     document.getElementById('contactBtn').addEventListener('click', () => {
-      window.location.href = 'tel:010-6403-5640';
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+      if (isIOS) {
+        const vcard = [
+          'BEGIN:VCARD',
+          'VERSION:3.0',
+          'FN:손은수',
+          'TEL;TYPE=CELL:010-6403-5640',
+          'EMAIL:sohnes51@gmail.com',
+          'ORG:AXZ Corp.',
+          'TITLE:Product Manager',
+          'END:VCARD'
+        ].join('\r\n');
+        const blob = new Blob([vcard], { type: 'text/vcard' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = '손은수.vcf';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      } else {
+        window.location.href = 'tel:010-6403-5640';
+      }
     });
 
     document.getElementById('emailBtn').addEventListener('click', () => {
