@@ -127,13 +127,21 @@
   </div>
 
   <script>
-    document.getElementById('downloadBtn').addEventListener('click', () => {
-      const a = document.createElement('a');
-      a.href = 'namecard.png';
-      a.download = '손은수_명함.png';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+      const res = await fetch('namecard.png');
+      const blob = await res.blob();
+      const file = new File([blob], '손은수_명함.png', { type: 'image/png' });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({ files: [file] });
+      } else {
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = '손은수_명함.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+      }
     });
 
     document.getElementById('contactBtn').addEventListener('click', () => {
